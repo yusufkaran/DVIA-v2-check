@@ -1,15 +1,27 @@
+platform :ios, '13.0'
+
 use_frameworks!
 
 target 'DVIA-v2' do
-    pod 'Parse'
-    pod 'GoogleAnalytics'
-    pod 'RealmSwift'
-    pod 'couchbase-lite-ios'
-    pod 'Flurry-iOS-SDK/FlurrySDK'
+  pod 'Parse'
+  pod 'GoogleAnalytics'
+  pod 'RealmSwift'
+  pod 'couchbase-lite-ios'
+  pod 'Flurry-iOS-SDK/FlurrySDK'
 end
 
 post_install do |installer|
+
+  # Mevcut Apple Silicon / Simulator ayarın
   installer.pods_project.build_configurations.each do |config|
     config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
   end
+
+  # Eski Pod'ların deployment target'larını yükselt
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+    end
+  end
+
 end
